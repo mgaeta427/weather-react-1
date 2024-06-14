@@ -5,8 +5,7 @@ import { Audio } from 'react-loader-spinner';
 export default function Weather(props) {
     function handleResponse(response) {
         alert(
-            `The weather in ${response.data.name} is $
-        {response.data.main.temp}°C`
+            `The weather in ${response.data.name} is ${response.data.main.temp}°C`
     ); 
     }
     let apiKey =  "8161b4309ee03faae957729ba7104797";
@@ -22,11 +21,9 @@ return (
   ariaLabel="loading"
   wrapperStyle
   wrapperClass
+
 />
 
 );
-
-<h2>Hello from Weather</h2>
-
 
 }
