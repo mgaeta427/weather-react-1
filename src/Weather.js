@@ -1,29 +1,114 @@
-import React from "react";
+import React, { useState } from "react";
+import WeatherInfo from "./WeatherInfo";
+import WeatherForecast from "./WeatherForecast";
 import axios from "axios";
-import { Audio } from 'react-loader-spinner';
+import "./Weather.css";
+
 
 export default function Weather(props) {
+    const [weatherData, setWeatherData] = useState({ ready: false });
+    const [ city, setCity] = useState(props.defaultCity);
+
     function handleResponse(response) {
-        alert(
-            `The weather in ${response.data.name} is ${response.data.main.temp}°C`
-    ); 
-    }
-    let apiKey =  "8161b4309ee03faae957729ba7104797";
-    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${props.city}&appid=${apiKey}&units=metric`;
+        setWeatherData({
+            ready: true,
+            coordinates: response.data.coordinates,
+            temperature: response.data.temperature.current,
+            humidity: response.data.temperature.humidity,
+            date: new Date(response.data.time * 1000),
+            description: response.data.condition.description,
+            icon: response.data.condition.icon,
+            wind: response.data.wind.speed,
+            city: response.data.city,
 
-    axios.get(apiUrl).then(handleResponse);
-return (
-    <Audio
-  height="80"
-  width="80"
-  radius="9"
-  color="blue"
-  ariaLabel="loading"
-  wrapperStyle
-  wrapperClass
+        });
+    }    
+    
+        function handleSubmit(event) {
+            event.preventDefault();
+            search();
+        }
 
-/>
+        function handleCityChange(event) {
+            setCity(event.target.value);
+        }
 
-);
+        function search() {
+            const apiKey = "cb286bad3607984b41ed10c8de5cf00e";
+            let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=metric`;
 
-}
+            axios.get(apiUrl).then(handleResponse);
+
+        }
+
+        if (weatherData.ready) {
+            return (
+                <div className="Weather">
+                    <a 
+                    href="https://www.shecodes.io/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >
+                        <img src="/images/logo.png" classNames="logo" alt="SheCodes Logo" />
+                        </a>
+                        <form onSubmit={handleSubmit}>
+                            <div className="row">
+                            <div className="col-9">
+                            <input
+                            type="search"
+                            placeholder="Enter a city.."
+                            className="form-control search-input"
+                            onChange={handleCityChange}
+                            />
+                            </div>
+                            <div className="col-3 p-0">
+                                <input
+                                type="submit"
+                                value="search"
+                                className="btn btn-primary w-100"
+                                />
+                                </div>
+                                </div>
+                                </form>
+                            <WeatherInfo data={weatherData} />
+                            <WeatherForecast coodinates={weatherData.coordinates}
+                            city={weatherData.city}
+                            />
+                            <footer>
+                                This project was coded by {"Maribel Boban"}
+                                <a
+                                href="https://www.shecodes.io"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                >
+                                    SheCodes
+                                    </a>
+                                    {""}
+                                    and is {""}
+                                    <a
+                                    href="https://github.com/shecodesio/weather"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    >
+                                    open-sourced on GitHub
+                                    </a>{" "}
+                                    {""}
+                                    and{""}
+                                    <a
+                                    href="https://shecodes-weather.netlify.app/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    >
+                                    hosted on netlify
+                                    </a>
+                                    </footer>
+                                    </div>
+                                    );
+                                } else {
+                                search();
+                                return "Loading...";
+                                }
+                            }
+        
+ 
+  
