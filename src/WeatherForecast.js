@@ -33,7 +33,7 @@ if (loaded) {
 </div>
     );
 } else {
-    let apiKey = "cb286bad3607984b41ed10c8de5cf00e";
+    let apiKey = "fbef01f4et1b02o0d25c27210a43ef3f";
     let apiUrl = `https://api.shecodes.io/weather/v1/forecast?query=${props.city}&key=${apiKey}units=metric`;
     axios.get(apiUrl).then(handleForecastResponse);
 
